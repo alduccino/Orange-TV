@@ -52,6 +52,15 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     sudo cp orange-tv-viewer-qt6.py /usr/local/bin/orange-tv-viewer
     sudo chmod +x /usr/local/bin/orange-tv-viewer
     
+    # Copy icon to system pixmaps directory
+    if [ -f "tv-128.ico" ]; then
+        sudo mkdir -p /usr/local/share/pixmaps
+        sudo cp tv-128.ico /usr/local/share/pixmaps/orange-tv-viewer.ico
+        echo "✓ Icon installed"
+    else
+        echo "⚠ Warning: tv-128.ico not found, icon will not be installed"
+    fi
+    
     # Copy desktop entry
     sudo cp orange-tv-viewer.desktop /usr/share/applications/
     
