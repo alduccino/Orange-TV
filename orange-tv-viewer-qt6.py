@@ -4,11 +4,11 @@ Orange TV Viewer - A KDE Plasma 6/Qt6 application to view Orange TV live program
 """
 
 import sys
-from PyQt6.QtCore import QUrl
+from PyQt6.QtCore import QUrl, Qt
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QToolBar, 
                              QVBoxLayout, QWidget)
 from PyQt6.QtWebEngineWidgets import QWebEngineView
-from PyQt6.QtWebEngineCore import QWebEngineSettings
+from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage
 from PyQt6.QtGui import QAction, QKeySequence
 
 class OrangeTVViewer(QMainWindow):
@@ -178,9 +178,33 @@ class OrangeTVViewer(QMainWindow):
         """Handle fullscreen requests from web content"""
         request.accept()
         if request.toggleOn():
+            # Hide menubar and toolbar when video goes fullscreen
+            self.menuBar().hide()
+            toolbar = self.findChild(QToolBar)
+            if toolbar:
+                toolbar.hide()
             self.showFullScreen()
         else:
+            # Restore menubar and toolbar when exiting fullscreen
+            self.menuBar().show()
+            toolbar = self.findChild(QToolBar)
+            if toolbar:
+                toolbar.show()
             self.showNormal()
+    
+    def keyPressEvent(self, event):
+        """Handle key press events"""
+        # Allow ESC to exit fullscreen
+        if event.key() == Qt.Key.Key_Escape:
+            if self.isFullScreen():
+                # Check if there's a fullscreen web element
+                self.browser.page().triggerAction(QWebEnginePage.WebAction.ExitFullScreen)
+                self.menuBar().show()
+                toolbar = self.findChild(QToolBar)
+                if toolbar:
+                    toolbar.show()
+                self.showNormal()
+        super().keyPressEvent(event)
 
 def main():
     app = QApplication(sys.argv)
