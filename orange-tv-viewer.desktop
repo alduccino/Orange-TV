@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Orange TV Viewer
+Comment=View Orange TV live programs
+Exec=/usr/local/bin/orange-tv-viewer
+Icon=multimedia-video-player
+Terminal=false
+Categories=AudioVideo;Video;Player;TV;Network;
+Keywords=tv;television;orange;streaming;live;
+StartupNotify=true
