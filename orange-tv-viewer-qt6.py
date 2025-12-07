@@ -4,18 +4,25 @@ Orange TV Viewer - A KDE Plasma 6/Qt6 application to view Orange TV live program
 """
 
 import sys
+import os
+from pathlib import Path
 from PyQt6.QtCore import QUrl, Qt
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QToolBar, 
                              QVBoxLayout, QWidget)
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage
-from PyQt6.QtGui import QAction, QKeySequence
+from PyQt6.QtGui import QAction, QKeySequence, QIcon
 
 class OrangeTVViewer(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Orange TV - Programmes en Direct")
         self.setGeometry(100, 100, 1400, 900)
+        
+        # Set application icon
+        icon_path = self.get_icon_path()
+        if icon_path:
+            self.setWindowIcon(QIcon(icon_path))
         
         # Store the home URL
         self.home_url = "https://tv.orange.fr/en-direct/programmes-en-cours"
@@ -54,6 +61,25 @@ class OrangeTVViewer(QMainWindow):
         
         # Handle fullscreen requests from web content
         self.browser.page().fullScreenRequested.connect(self.handle_fullscreen_request)
+    
+    def get_icon_path(self):
+        """Find the icon file in possible locations"""
+        # Possible icon locations
+        possible_paths = [
+            # Same directory as script
+            Path(__file__).parent / "tv-128.ico",
+            # System-wide installation
+            Path("/usr/share/pixmaps/orange-tv-viewer.ico"),
+            Path("/usr/local/share/pixmaps/orange-tv-viewer.ico"),
+            # Current directory
+            Path("tv-128.ico"),
+        ]
+        
+        for path in possible_paths:
+            if path.exists():
+                return str(path)
+        
+        return None
     
     def create_toolbar(self):
         """Create the navigation toolbar"""
@@ -211,6 +237,19 @@ def main():
     app.setApplicationName("Orange TV Viewer")
     app.setOrganizationName("OrangeTVViewer")
     app.setApplicationDisplayName("Orange TV Viewer")
+    
+    # Set application icon
+    icon_paths = [
+        Path(__file__).parent / "tv-128.ico",
+        Path("/usr/share/pixmaps/orange-tv-viewer.ico"),
+        Path("/usr/local/share/pixmaps/orange-tv-viewer.ico"),
+        Path("tv-128.ico"),
+    ]
+    
+    for icon_path in icon_paths:
+        if icon_path.exists():
+            app.setWindowIcon(QIcon(str(icon_path)))
+            break
     
     # The application will automatically use the system theme (Breeze for KDE Plasma 6)
     
