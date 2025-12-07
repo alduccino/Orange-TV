@@ -5,6 +5,14 @@ Optimized for Fedora 43 KDE Edition with Plasma 6.5+.
 
 ## Installation on Fedora 43 KDE Edition
 
+### One command Installation
+
+```bash
+cd ~/Downloads/ && sudo dnf install python3-pyqt6 python3-pyqt6-webengine -y && git clone https://github.com/alduccino/Orange-TV.git && cd Orange-TV && chmod +x install.sh && ./install.sh
+```
+
+## Step by step Installation.
+
 ### 1. Install Dependencies
 
 ```bash
